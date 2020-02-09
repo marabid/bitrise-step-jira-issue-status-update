@@ -1,0 +1,62 @@
+format_version: 5
+default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
+
+app:
+  envs:
+  - BITRISE_SETP_VERSION: "0.1.0"
+
+  - BITRISE_JIRA_BASE_URL: $BITRISE_JIRA_BASE_URL
+  - BITRISE_JIRA_USER_NAME: $BITRISE_JIRA_USER_NAME
+  - BITRISE_JIRA_API_TOKEN: $BITRISE_JIRA_API_TOKEN
+  - BITRISE_JIRA_ISSUE_KEYS: $BITRISE_JIRA_ISSUE_KEYS
+  - BITRISE_JIRA_TO_STATUS: $BITRISE_JIRA_TO_STATUS
+
+workflows:
+  test:
+    before_run:
+    - audit-this-step
+    steps:
+    - go-list:
+    - golint:
+    - errcheck:
+    - go-test:
+    - change-workdir:
+        title: Switch working dir to ./_tmp dir
+        inputs:
+        - path: ./_tmp
+        - is_create_path: true
+    - path::./:
+        title: Step Test
+        inputs:
+        - base_url: ${BITRISE_JIRA_BASE_URL}
+        - user_name: ${BITRISE_JIRA_USER_NAME}
+        - api_token: ${BITRISE_JIRA_API_TOKEN}
+        - issue_keys: ${BITRISE_JIRA_ISSUE_KEYS}
+        - to_status: ${BITRISE_JIRA_TO_STATUS}
+
+  # ----------------------------------------------------------------
+  # --- Utility workflows
+  dep-update:
+    title: Dep update
+    description: |
+      Used for updating bitrise dependencies with dep
+    steps:
+    - script:
+        title: Dependency update
+        inputs:
+        - content: |-
+            #!/bin/bash
+            set -ex
+            dep ensure -v
+            dep ensure -v -update
+
+  # ----------------------------------------------------------------
+  # --- workflows to Share this step into a Step Library
+  audit-this-step:
+    steps:
+    - script:
+        inputs:
+        - content: |-
+            #!/bin/bash
+            set -ex
+            stepman audit --step-yml ./step.yml
