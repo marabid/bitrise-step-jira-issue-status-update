@@ -21,9 +21,9 @@ type jiraService struct {
 	authHeader string
 }
 
-func createService(user string, token string, baseURL string) *jiraService {
+func createService(user string, token string, baseURL string) jiraService {
 	basicAuth := []byte(user + `:` + token)
-	return &jiraService{
+	return jiraService{
 		client: http.Client{
 			Timeout: time.Second * 10,
 		},

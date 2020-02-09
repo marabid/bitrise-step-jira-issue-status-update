@@ -9,7 +9,7 @@ app:
   - BITRISE_JIRA_USER_NAME: $BITRISE_JIRA_USER_NAME
   - BITRISE_JIRA_API_TOKEN: $BITRISE_JIRA_API_TOKEN
   - BITRISE_JIRA_ISSUE_KEYS: $BITRISE_JIRA_ISSUE_KEYS
-  - BITRISE_JIRA_TO_STATUS: $BITRISE_JIRA_TO_STATUS
+  - BITRISE_JIRA_TO_STATUS_ID: $BITRISE_JIRA_TO_STATUS_ID
 
 workflows:
   test:
@@ -32,7 +32,7 @@ workflows:
         - user_name: ${BITRISE_JIRA_USER_NAME}
         - api_token: ${BITRISE_JIRA_API_TOKEN}
         - issue_keys: ${BITRISE_JIRA_ISSUE_KEYS}
-        - to_status: ${BITRISE_JIRA_TO_STATUS}
+        - to_status_id: ${BITRISE_JIRA_TO_STATUS_ID}
 
   # ----------------------------------------------------------------
   # --- Utility workflows

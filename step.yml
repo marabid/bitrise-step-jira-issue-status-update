@@ -52,9 +52,9 @@ inputs:
       description: JIRA issue keys separatad with `|`
       is_required: true
 
-  - to_status:
+  - to_status_id:
     opts:
       title: To status
-      summary: Status in which JIRA issues should be after this step
-      description: Status in which JIRA issues should be after this step
+      summary: Status ID in which JIRA issues should be after this step
+      description: Status ID in which JIRA issues should be after this step
       is_required: true
