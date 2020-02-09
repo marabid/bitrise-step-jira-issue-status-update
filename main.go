@@ -34,7 +34,6 @@ func main() {
 	for _, issueKey := range strings.Split(cfg.IssueKeys, `|`) {
 		waitGroup.Add(1)
 		go updateIssue(&service, issueKey, cfg.ToStatusID, &waitGroup)
-		fmt.Println()
 	}
 
 	waitGroup.Wait()
@@ -46,7 +45,7 @@ func updateIssue(service *jiraService, issueKey string, statusID string, waitGro
 
 	transitions, err := service.getAvailableTransitions(issueKey)
 	if err != nil {
-		log.Warnf("Failed to get status to %s for issue %s, error: %s", statusID, issueKey, err)
+		log.Warnf("Failed to get available transitions for issue %s, error: %s", issueKey, err)
 		waitGroup.Done()
 		return
 	}
