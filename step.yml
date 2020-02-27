@@ -1,9 +1,9 @@
 title: Update JIRA Issue Status
 summary: Change status of JIRA issues.
 description: Automate process of moving issues from 'In Progress' to 'Code Review' or 'In Test'.
-website: https://github.com/MiSikora/bitrise-step-update-jira-issue-status
-source_code_url: https://github.com/MiSikora/bitrise-step-update-jira-issue-status
-support_url: https://github.com/MiSikora/bitrise-step-update-jira-issue-status/issues
+website: https://github.com/MiSikora/bitrise-step-jira-issue-status-update
+source_code_url: https://github.com/MiSikora/bitrise-step-jira-issue-status-update
+support_url: https://github.com/MiSikora/bitrise-step-jira-issue-status-update/issues
 
 type_tags:
   - utility
