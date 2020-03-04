@@ -15,15 +15,20 @@ import (
 	"github.com/bitrise-io/go-utils/urlutil"
 )
 
-type jiraService struct {
-	client     http.Client
-	baseURL    string
-	authHeader string
+type jiraServiceFactory interface {
+	create(user string, token string, baseURL string) jiraService
 }
 
-func createService(user string, token string, baseURL string) jiraService {
+type jiraService interface {
+	getAvailableTransitions(issueKey string) (*Transitions, error)
+	makeTransition(issueKey string, transition Transition) error
+}
+
+type httpJiraServiceFactory struct{}
+
+func (factory httpJiraServiceFactory) create(user string, token string, baseURL string) jiraService {
 	basicAuth := []byte(user + `:` + token)
-	return jiraService{
+	return httpJiraService{
 		client: http.Client{
 			Timeout: time.Second * 10,
 		},
@@ -32,7 +37,13 @@ func createService(user string, token string, baseURL string) jiraService {
 	}
 }
 
-func (service jiraService) getAvailableTransitions(issueKey string) (*Transitions, error) {
+type httpJiraService struct {
+	client     http.Client
+	baseURL    string
+	authHeader string
+}
+
+func (service httpJiraService) getAvailableTransitions(issueKey string) (*Transitions, error) {
 	httpURL, err := urlutil.Join(service.baseURL, "rest/api/3/issue", issueKey, "transitions")
 	if err != nil {
 		return nil, err
@@ -65,7 +76,7 @@ func (service jiraService) getAvailableTransitions(issueKey string) (*Transition
 	return &transitions, nil
 }
 
-func (service jiraService) makeTransition(issueKey string, transition Transition) error {
+func (service httpJiraService) makeTransition(issueKey string, transition Transition) error {
 	httpURL, err := urlutil.Join(service.baseURL, "rest/api/3/issue", issueKey, "transitions")
 	if err != nil {
 		return err
