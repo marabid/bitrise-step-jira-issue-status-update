@@ -31,13 +31,26 @@ func main() {
 	service := createService(cfg.UserName, cfg.APIToken, cfg.BaseURL)
 	var waitGroup sync.WaitGroup
 
-	for _, issueKey := range strings.Split(cfg.IssueKeys, `|`) {
+	for _, issueKey := range distinct(strings.Split(cfg.IssueKeys, `|`)) {
 		waitGroup.Add(1)
 		go updateIssue(&service, issueKey, cfg.ToStatusID, &waitGroup)
 	}
 
 	waitGroup.Wait()
 	log.Infof("Processed all issues")
+}
+
+func distinct(input []string) []string {
+	result := make([]string, 0, len(input))
+	presenceFlags := make(map[string]bool)
+
+	for _, value := range input {
+		if _, exists := presenceFlags[value]; !exists {
+			presenceFlags[value] = true
+			result = append(result, value)
+		}
+	}
+	return result
 }
 
 func updateIssue(service *jiraService, issueKey string, statusID string, waitGroup *sync.WaitGroup) {
