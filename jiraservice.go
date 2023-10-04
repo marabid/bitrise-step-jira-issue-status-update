@@ -44,7 +44,7 @@ type httpJiraService struct {
 }
 
 func (service httpJiraService) getAvailableTransitions(issueKey string) (*Transitions, error) {
-	httpURL, err := urlutil.Join(service.baseURL, "rest/api/3/issue", issueKey, "transitions")
+	httpURL, err := urlutil.Join(service.baseURL, "rest/api/3/issue", strings.TrimSpace(issueKey), "transitions")
 	if err != nil {
 		return nil, err
 	}
@@ -77,7 +77,7 @@ func (service httpJiraService) getAvailableTransitions(issueKey string) (*Transi
 }
 
 func (service httpJiraService) makeTransition(issueKey string, transition Transition) error {
-	httpURL, err := urlutil.Join(service.baseURL, "rest/api/3/issue", issueKey, "transitions")
+	httpURL, err := urlutil.Join(service.baseURL, "rest/api/3/issue", strings.TrimSpace(issueKey), "transitions")
 	if err != nil {
 		return err
 	}
